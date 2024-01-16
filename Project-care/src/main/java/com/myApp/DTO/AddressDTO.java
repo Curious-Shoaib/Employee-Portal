@@ -1,13 +1,19 @@
 package com.myApp.DTO;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 public class AddressDTO {
 
 	Integer houseNo;
 	String sector;
+	@NotBlank(message="{CITY_BLANK}")
 	String city;
+	@Pattern(regexp="\\d{6}",message="{INVALID_ZIP}")
 	String zipCode;
+	@NotBlank(message="{STATE_BLANK}")
 	String state;
+	@NotBlank(message="{CNT_BLANK}")
 	String country;
 	public Integer getHouseNo() {
 		return houseNo;

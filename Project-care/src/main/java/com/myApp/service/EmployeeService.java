@@ -1,4 +1,4 @@
-package com.myApp.Service;
+package com.myApp.service;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import com.myApp.exception.ProjectException;
 
 public interface EmployeeService {
 
-	public void addEmployee(EmployeeDTO DTO) throws ProjectException;
+	public Integer addEmployee(EmployeeDTO DTO) throws ProjectException;
 	public EmployeeDTO getEmployee(Integer eId) throws ProjectException;
 	public List<EmployeeDTO> getAllEmployees() throws ProjectException;
 	public Integer createDemand(Integer managerId,Integer reviewerId,String technology) throws ProjectException; 

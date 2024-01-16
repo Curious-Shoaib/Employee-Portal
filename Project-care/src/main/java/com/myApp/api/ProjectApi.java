@@ -1,4 +1,4 @@
-package com.myApp.api.project;
+package com.myApp.api;
 
 import java.util.ArrayList;
 import java.util.List;

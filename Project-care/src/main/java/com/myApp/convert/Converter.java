@@ -40,13 +40,12 @@ public class Converter {
 		// TODO Auto-generated method stub
 		
 		Employee em=new Employee();
-		em.setAddress(dto.getAddress());
+		em.setAddress(convert(dto.getAddress()));
 		em.setAge(dto.getAge());
 		em.setDcName(dto.getDcName());
 		em.setDesignation(dto.getDesignation());
 		em.setEmail(dto.getEmail());
 		em.setEmployeeName(dto.getEmployeeName());
-		em.setEmployeeId(dto.getEmployeeId());
 		em.setJoiningDate(dto.getJoiningDate());
 		em.setSkills(dto.getSkills());
 		em.setUnit(dto.getUnit());
@@ -59,13 +58,12 @@ public class Converter {
 		// TODO Auto-generated method stub
 		
 		EmployeeDTO em=new EmployeeDTO();
-		em.setAddress(dto.getAddress());
+		em.setAddress(convert(dto.getAddress()));
 		em.setAge(dto.getAge());
 		em.setDcName(dto.getDcName());
 		em.setDesignation(dto.getDesignation());
 		em.setEmail(dto.getEmail());
 		em.setEmployeeName(dto.getEmployeeName());
-		em.setEmployeeId(dto.getEmployeeId());
 		em.setJoiningDate(dto.getJoiningDate());
 		em.setSkills(dto.getSkills());
 		em.setUnit(dto.getUnit());
@@ -79,7 +77,6 @@ public class Converter {
 		Project pr=new Project();
 		pr.setBudget(dto.getBudget());
 		pr.setClient(dto.getClient());
-		pr.setProjectId(dto.getProjectId());
 		pr.setProjectName(dto.getProjectName());
 		pr.setTechnology(dto.getTechnology());
 		pr.setStartingDate(dto.getStartingDate());
@@ -91,7 +88,6 @@ public class Converter {
 		ProjectDTO pr=new ProjectDTO();
 		pr.setBudget(dt.getBudget());
 		pr.setClient(dt.getClient());
-		pr.setProjectId(dt.getProjectId());
 		pr.setProjectName(dt.getProjectName());
 		pr.setTechnology(dt.getTechnology());
 		pr.setStartingDate(dt.getStartingDate());

@@ -1,4 +1,4 @@
-package com.myApp.Service;
+package com.myApp.service;
 
 import com.myApp.DTO.ProjectDTO;
 import com.myApp.exception.ProjectException;

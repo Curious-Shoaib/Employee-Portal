@@ -18,7 +18,7 @@ public class Employee {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer employeeId;
 	private String employeeName;
-	private Integer mobileNo;
+	private String mobileNo;
 	private String email;
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="emp_address")
@@ -50,10 +50,10 @@ public class Employee {
 	public void setEmployeeName(String employeeName) {
 		this.employeeName = employeeName;
 	}
-	public Integer getMobileNo() {
+	public String getMobileNo() {
 		return mobileNo;
 	}
-	public void setMobileNo(Integer mobileNo) {
+	public void setMobileNo(String mobileNo) {
 		this.mobileNo = mobileNo;
 	}
 	public String getEmail() {

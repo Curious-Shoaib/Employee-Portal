@@ -1,4 +1,4 @@
-package com.myApp.Service;
+package com.myApp.service;
 
 import java.util.List;
 import java.util.Optional;

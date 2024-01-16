@@ -1,4 +1,4 @@
-package com.myApp.Service;
+package com.myApp.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,17 +34,19 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Autowired
 	Environment env;
 	
-	public void addEmployee(EmployeeDTO employeeDTO) throws ProjectException {
+	public Integer addEmployee(EmployeeDTO employeeDTO) throws ProjectException {
 		
 		Employee employee= Converter.convert(employeeDTO);
-		employeeRepo.save(employee);
+		employee=employeeRepo.save(employee);
+		return employee.getEmployeeId();
+		
 	}
 	
     public EmployeeDTO getEmployee(Integer eId) throws ProjectException {
 		
 		Optional<Employee> opt=employeeRepo.findById(eId);
 		if(opt.isEmpty())
-			throw new ProjectException(env.getProperty("EmpService.EMP_NOT_FOUND"));
+			throw new ProjectException(("EmpService.EMP_NOT_FOUND"));
 		
 		EmployeeDTO dto=Converter.convert(opt.get());
 		return dto;
@@ -59,7 +61,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     	list.add(dto);
     });
     	if(list.isEmpty())
-    		throw new ProjectException(env.getProperty("EmpService.PROJECT_NF"));
+    		throw new ProjectException(("EmpService.PROJECT_NF"));
     	return list;
     	
     }
@@ -68,17 +70,17 @@ public class EmployeeServiceImpl implements EmployeeService {
     	Optional<Employee> opt=employeeRepo.findById(managerId);
     	Optional<Employee> optRev=employeeRepo.findById(reviewerId);
     	if(opt.isEmpty())
-    		throw new ProjectException(env.getProperty("EmpService.EMP_NOT_FOUND"));
+    		throw new ProjectException(("EmpService.EMP_NOT_FOUND"));
     	if(optRev.isEmpty())
-    		throw new ProjectException(env.getProperty("EmpService.REV_NF"));
+    		throw new ProjectException(("EmpService.REV_NF"));
     	
     	String desig=opt.get().getDesignation();
     	if(desig==null || !desig.equals("Manager"))
-    		throw new ProjectException(env.getProperty("EmpService.NOT_A_MANAGER"));
+    		throw new ProjectException(("EmpService.NOT_A_MANAGER"));
     	
     	List<Project> projects=projectRepo.findByTechnology(technology);
     	if(projects.isEmpty())
-    		throw new ProjectException(env.getProperty("EmpService.PROJECT_NA_FOR_THIS_TECH"));
+    		throw new ProjectException(("EmpService.PROJECT_NA_FOR_THIS_TECH"));
     	
     	Demand demand=new Demand(managerId,reviewerId,projects.get(0));
     	return demandRepo.save(demand).getDemandId();
@@ -90,7 +92,7 @@ public class EmployeeServiceImpl implements EmployeeService {
   
     	List<Demand> demands = demandRepo.findAll();
     	if(demands.isEmpty())
-    		throw new ProjectException(env.getProperty("EmpService.DEMAND_NF"));
+    		throw new ProjectException(("EmpService.DEMAND_NF"));
     	
     	return demands;
     }
@@ -100,17 +102,19 @@ public class EmployeeServiceImpl implements EmployeeService {
     {
     	Optional<Employee> optEmp=employeeRepo.findById(empId);
     	if(optEmp.isEmpty())
-    		throw new ProjectException(env.getProperty("EmpService.EMP_NOT_FOUND"));
+    		throw new ProjectException(("EmpService.EMP_NOT_FOUND"));
     	Employee employee=optEmp.get();
     	
     	if(employee.getProject() != null)
-    		throw new ProjectException(env.getProperty("EmpService.ALREADY_MAPPED"));
+    		throw new ProjectException(("EmpService.ALREADY_MAPPED"));
     			
     	Optional<Demand> opt=demandRepo.findById(demandId);
     	if(opt.isEmpty())
-    		throw new ProjectException(env.getProperty("EmpService.DEMAND_NF"));
+    		throw new ProjectException(("EmpService.DEMAND_NF"));
     	
     	Demand demand=opt.get();
+    	if(demand.getManagerId()==empId)
+    		throw new ProjectException(("EmpService.CANT_APPLY_TO_SELF"));
     	
     	demand.getApplicants().add(employee);
     	demandRepo.save(demand);				// employee added to applicants of a demand
@@ -121,15 +125,15 @@ public class EmployeeServiceImpl implements EmployeeService {
     	
     	Optional<Employee> optEmp=employeeRepo.findById(reviewerId);
     	if(optEmp.isEmpty())
-    		throw new ProjectException(env.getProperty("EmpService.EMP_NOT_FOUND"));
+    		throw new ProjectException(("EmpService.REV_NF"));
     	
     	Optional<Demand> opt=demandRepo.findById(demandId);
     	if(opt.isEmpty())
-    		throw new ProjectException(env.getProperty("EmpService.DEMAND_NF"));
+    		throw new ProjectException(("EmpService.DEMAND_NF"));
     	
     	Demand demand=opt.get();
     	if(!reviewerId.equals(demand.getReviewerId()))
-    		throw new ProjectException(env.getProperty("EmpService.UNAUTH_NOT_A_REVIEWER"));
+    		throw new ProjectException(("EmpService.UNAUTH_NOT_A_REVIEWER"));
     	
     	Project project=demand.getProject();
     	String techNeed=project.getTechnology();
@@ -137,8 +141,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     	
     	Employee employee=null;
-    	if(applicants.isEmpty())
-    		throw new ProjectException(env.getProperty("EmpService.APPLI_NF"));
     	for(Employee e : applicants)
     	{
     		if(e.getEmployeeId().equals(applicantId))
@@ -148,15 +150,19 @@ public class EmployeeServiceImpl implements EmployeeService {
     		}
     		
     	}
+    	if(employee==null)
+    	{
+    		throw new ProjectException(("EmpService.EMP_NOT_APPLIED"));
+    	}
     		String response=null;
-			if(employee.getSkills().equals(techNeed))
+			if(employee.getSkills().equalsIgnoreCase(techNeed))
     	    {
     			 //Assigning manager
     			 employee.setManager(employeeRepo.findById(demand.getManagerId()).get());
     			 //Assigning project
     			 employee.setProject(project);
     			 employeeRepo.save(employee);
-    			 response=(env.getProperty("EmpService.PROJECT_ASSIGNED_TO_APPLICANT") + project.getProjectId() + " & manager is :" +demand.getManagerId());
+    			 response=(env.getProperty(("EmpService.PROJECT_ASSIGNED_TO_APPLICANT")) + project.getProjectId() + " & manager is :" +demand.getManagerId());
     	    }
     		 else
     			 response=env.getProperty("EmpService.APPLI_NOT_FIT")+employee.getEmployeeId();
@@ -172,27 +178,24 @@ public class EmployeeServiceImpl implements EmployeeService {
     public List<String> reviewAllApplicants(Integer reviewerId,Integer demandId) throws ProjectException{
     	Optional<Employee> optEmp=employeeRepo.findById(reviewerId);
     	if(optEmp.isEmpty())
-    		throw new ProjectException(env.getProperty("EmpService.EMP_NOT_FOUND"));
+    		throw new ProjectException(("EmpService.EMP_NOT_FOUND"));
     	
-    	String desig=optEmp.get().getDesignation();
-//    	if(desig==null || !desig.equals("Reviewer") )
-//    		throw new ProjectException(env.getProperty("EmpService.UNAUTH_NOT_A_REVIEWER"));
-    	
+    	String desig=optEmp.get().getDesignation();	
     	
     	Optional<Demand> opt=demandRepo.findById(demandId);
     	if(opt.isEmpty())
-    		throw new ProjectException(env.getProperty("EmpService.DEMAND_NF"));
+    		throw new ProjectException(("EmpService.DEMAND_NF"));
     	
     	Demand demand=opt.get();
     	if(reviewerId != demand.getReviewerId())
-    		throw new ProjectException(env.getProperty("EmpService.UNAUTH_NOT_A_REVIEWER"));
+    		throw new ProjectException(("EmpService.UNAUTH_NOT_A_REVIEWER"));
     	
     	Project project=demand.getProject();
     	String techNeed=project.getTechnology();
     	List<Employee> applicants=demand.getApplicants();
     	
     	if(applicants.isEmpty())
-    		throw new ProjectException(env.getProperty("EmpService.APPLI_NF"));
+    		throw new ProjectException(("EmpService.APPLI_NF"));
     	
     	List<String> responses=new ArrayList<>();
     	
@@ -202,22 +205,22 @@ public class EmployeeServiceImpl implements EmployeeService {
     	for(Employee employee : applicantsList)
     	{
     		
-			if(employee.getSkills().equals(techNeed))
+			if(employee.getSkills().equalsIgnoreCase(techNeed))
     	    {
     			 // map this employee
     			 List<Employee> managers=employeeRepo.findManagerByTech(techNeed);
     			 if(managers.isEmpty())
-    				 throw new ProjectException(env.getProperty("EmpService.MANAGER_NF"));
+    				 throw new ProjectException(("EmpService.MANAGER_NF"));
     			 employee.setDesignation("Mapped");
     			 //Assigning manager
     			 employee.setManager(managers.get(0));
     			 //Assigning project
     			 employee.setProject(project);
     			 employeeRepo.save(employee);
-    			 responses.add(env.getProperty("EmpService.PROJECT_ASSIGNED_TO_APPLICANT") + project.getProjectId() + " & manager is :" +demand.getManagerId());
+    			 responses.add(env.getProperty(("EmpService.PROJECT_ASSIGNED_TO_APPLICANT")) + project.getProjectId() + " & manager is :" +demand.getManagerId());
     	    }
     		 else
-    			 responses.add(env.getProperty("EmpService.APPLI_NOT_FIT")+employee.getEmployeeId());
+    			 responses.add(env.getProperty(("EmpService.APPLI_NOT_FIT"))+employee.getEmployeeId());
     		 //employee is removed from applicants bcz he is assinged to a project
     		 demand.getApplicants().remove(employee);
     		 demandRepo.save(demand);
