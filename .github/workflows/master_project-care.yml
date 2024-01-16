@@ -14,11 +14,11 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Standard Checkout
-  uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-      - name: Set up Java version
-        uses: actions/setup-java@v1
+      - name: Standard Checkout
+        uses: actions/checkout@v2
+
         with:
           java-version: '17'
 
