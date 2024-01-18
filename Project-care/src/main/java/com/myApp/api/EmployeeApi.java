@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -72,13 +73,13 @@ public class EmployeeApi {
 		return new ResponseEntity<>(msg,HttpStatus.CREATED);
 	}
 	
-	@GetMapping("/revSingle/{reviewerId}/{applicantId}/{demandId}")
+	@PutMapping("/revSingle/{reviewerId}/{applicantId}/{demandId}")
 	public ResponseEntity reviewSingleApplicant( @NotNull(message="{Validation.VALUE_BLANK}") @PathVariable Integer reviewerId,@NotNull(message="{Validation.VALUE_BLANK}") @PathVariable Integer applicantId,@NotNull(message="{Validation.VALUE_BLANK}") @PathVariable Integer demandId) throws Exception{
 		String response=employeeService.reviewApplicant(reviewerId, applicantId, demandId);
 		return new ResponseEntity<>(response,HttpStatus.OK);
 	}
 	
-	@GetMapping("/revAll/{reviewerId}/{demandId}")
+	@PutMapping("/revAll/{reviewerId}/{demandId}")
 	public ResponseEntity reviewApplicants(@NotNull(message="{Validation.VALUE_BLANK}") @PathVariable Integer reviewerId,@NotNull(message="{Validation.VALUE_BLANK}") @PathVariable Integer demandId) throws Exception {
 		List<String> responses=employeeService.reviewAllApplicants(reviewerId,demandId);
 		return new ResponseEntity<>(responses,HttpStatus.OK);
