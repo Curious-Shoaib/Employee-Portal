@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -23,6 +24,8 @@ public class Employee {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="emp_address")
 	private Address address;
+	@OneToMany(mappedBy = "employee",cascade = CascadeType.ALL)
+	private List<Attendance> attendance;
 	private String designation;  // Manager , System Engineer,
 	private String dcName; 
 	private Integer age;
@@ -34,9 +37,14 @@ public class Employee {
 	@ManyToOne
 	@JoinColumn(name="manager_id")
 	private Employee manager;
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name="")
+	private List<WorkFromHomeApplication> myWorkFromHomeApplications;
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<WorkFromHomeApplication> WorkFromHomAappliedToMe;;
 	private Integer unit;
 	private String skills;  // skills separated by comma
-	
 	
 	public Integer getEmployeeId() {
 		return employeeId;
@@ -67,6 +75,12 @@ public class Employee {
 	}
 	public void setAddress(Address address) {
 		this.address = address;
+	}
+	public List<Attendance> getAttendance() {
+		return attendance;
+	}
+	public void setAttendance(List<Attendance> attendance) {
+		this.attendance = attendance;
 	}
 	public String getDesignation() {
 		return designation;
@@ -110,6 +124,18 @@ public class Employee {
 	public void setManager(Employee manager) {
 		this.manager = manager;
 	}
+	public List<WorkFromHomeApplication> getMyWorkFromHomeApplications() {
+		return myWorkFromHomeApplications;
+	}
+	public void setMyWorkFromHomeApplications(List<WorkFromHomeApplication> myWorkFromHomeApplications) {
+		this.myWorkFromHomeApplications = myWorkFromHomeApplications;
+	}
+	public List<WorkFromHomeApplication> getWorkFromHomeappliedToMe() {
+		return WorkFromHomAappliedToMe;
+	}
+	public void setWorkFromHomeappliedToMe(List<WorkFromHomeApplication> workFromHomeappliedToMe) {
+		WorkFromHomAappliedToMe = workFromHomeappliedToMe;
+	}
 	public Integer getUnit() {
 		return unit;
 	}
@@ -122,6 +148,8 @@ public class Employee {
 	public void setSkills(String skills) {
 		this.skills = skills;
 	}
+	
+	
 	
 	
 	

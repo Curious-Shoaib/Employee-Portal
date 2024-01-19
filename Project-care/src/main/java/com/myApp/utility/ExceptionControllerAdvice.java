@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import com.myApp.exception.AttendanceException;
 import com.myApp.exception.ProjectException;
 
 import jakarta.validation.ConstraintViolationException;
@@ -42,6 +43,15 @@ public class ExceptionControllerAdvice {
 		ef.setErrorCode(HttpStatus.NOT_FOUND.value());
 		ef.setTimestamp(LocalDateTime.now());
 		return new ResponseEntity<>(ef,HttpStatus.NOT_FOUND);
+	}
+	@ExceptionHandler(AttendanceException.class)
+	public ResponseEntity<ErrorInfo> AttendanceExceptionHandler(AttendanceException exception) {
+		
+		ErrorInfo ef=new ErrorInfo();
+		ef.setErrorMessage(env.getProperty(exception.getMessage()));
+		ef.setErrorCode(HttpStatus.BAD_REQUEST.value());
+		ef.setTimestamp(LocalDateTime.now());
+		return new ResponseEntity<>(ef,HttpStatus.BAD_REQUEST);
 	}
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ErrorInfo> exceptionHandler(MethodArgumentNotValidException exception) {
