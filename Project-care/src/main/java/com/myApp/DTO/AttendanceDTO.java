@@ -6,6 +6,9 @@ import java.time.LocalTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+
 
 public class AttendanceDTO {
 
@@ -13,6 +16,9 @@ public class AttendanceDTO {
 	Integer managerId;
 	LocalTime punchIn;
 	LocalTime punchOut;
+	@NotNull
+	@PastOrPresent
+	LocalDate date;
 	public LocalTime getPunchIn() {
 		return punchIn;
 	}
@@ -25,7 +31,7 @@ public class AttendanceDTO {
 	public void setPunchOut(LocalTime punchOut) {
 		this.punchOut = punchOut;
 	}
-	LocalDate date;
+
 	public Integer getEmployeeId() {
 		return employeeId;
 	}

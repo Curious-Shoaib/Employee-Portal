@@ -2,6 +2,7 @@ package com.myApp.entity;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -39,7 +40,6 @@ public class Employee {
 	private Employee manager;
 	
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name="")
 	private List<WorkFromHomeApplication> myWorkFromHomeApplications;
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<WorkFromHomeApplication> WorkFromHomAappliedToMe;;
@@ -148,6 +148,36 @@ public class Employee {
 	public void setSkills(String skills) {
 		this.skills = skills;
 	}
+	
+	
+	
+	@Override
+	public String toString() {
+		return "Employee [employeeId=" + employeeId + ", employeeName=" + employeeName + ", mobileNo=" + mobileNo
+				+ ", email=" + email + ", address=" + address + ", attendance=" + attendance + ", designation="
+				+ designation + ", dcName=" + dcName + ", age=" + age + ", gender=" + gender + ", joiningDate="
+				+ joiningDate + ", project=" + project + ", manager=" + manager + ", myWorkFromHomeApplications="
+				+ myWorkFromHomeApplications + ", WorkFromHomAappliedToMe=" + WorkFromHomAappliedToMe + ", unit=" + unit
+				+ ", skills=" + skills + "]";
+	}
+	@Override
+	public int hashCode() {
+		return Objects.hash(WorkFromHomAappliedToMe, address, age, attendance, dcName, designation, email, employeeId,
+				employeeName, gender, joiningDate, manager, mobileNo, myWorkFromHomeApplications, project, skills,
+				unit);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Employee other = (Employee) obj;
+		return this.employeeId==other.getEmployeeId();
+	}
+	
 	
 	
 	

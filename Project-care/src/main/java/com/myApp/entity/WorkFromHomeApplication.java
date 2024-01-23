@@ -1,6 +1,7 @@
 package com.myApp.entity;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,18 +16,24 @@ public class WorkFromHomeApplication {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	Integer applicationId;
+	Long applicationId;
 	@ManyToOne
 	@JoinColumn(name="applicantId")
 	Employee applicant;
-	@Column(unique = true)
 	LocalDate dateOfApplication;
+	LocalDate dateOfAttendance;
 	String status;				//approved/Rejected
 	
-	public Integer getApplicationId() {
+	public LocalDate getDateOfAttendance() {
+		return dateOfAttendance;
+	}
+	public void setDateOfAttendance(LocalDate dateOfAttendance) {
+		this.dateOfAttendance = dateOfAttendance;
+	}
+	public Long getApplicationId() {
 		return applicationId;
 	}
-	public void setApplicationId(Integer applicationId) {
+	public void setApplicationId(Long applicationId) {
 		this.applicationId = applicationId;
 	}
 	public Employee getApplicant() {
@@ -46,6 +53,27 @@ public class WorkFromHomeApplication {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		WorkFromHomeApplication other = (WorkFromHomeApplication) obj;
+		return Objects.equals(applicant.getEmployeeId(), other.applicant.getEmployeeId()) && Objects.equals(applicationId, other.applicationId)
+				&& Objects.equals(dateOfApplication, other.dateOfApplication)
+				&& Objects.equals(dateOfAttendance, other.dateOfAttendance) && Objects.equals(status, other.status);
+	}
+	@Override
+	public String toString() {
+		return "WorkFromHomeApplication [applicationId=" + applicationId + ", applicantId=" + applicant.getEmployeeId()
+				+ ", dateOfApplication=" + dateOfApplication + ", dateOfAttendance=" + dateOfAttendance + ", status="
+				+ status + "]";
 	}
 	
 	
